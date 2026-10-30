@@ -102,7 +102,22 @@
             <artifactId>ecj</artifactId>
             <version>3.38.0</version>
         </dependency>
+        <!-- ibatis -->
+    
+        <dependency>
+                <groupId>org.apache.ibatis</groupId>
+                <artifactId>ibatis-sqlmap</artifactId>
+                <version>2.3.4.726</version>
+            </dependency>
+    
+        <!-- h2 memory database -->
+        <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>2.2.224</version>
+            </dependency>
     </dependencies>
+
 
     <build>
         <finalName>struts1-app</finalName>
