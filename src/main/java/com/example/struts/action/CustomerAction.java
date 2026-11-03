@@ -1,7 +1,8 @@
 package com.example.struts.action;
 
-import com.example.struts.form.CustomerForm;
-import com.example.struts.model.Customer;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
@@ -10,21 +11,13 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.CopyOnWriteArrayList;
+import com.example.struts.db.CustomerDao;
+import com.example.struts.form.CustomerForm;
+import com.example.struts.model.Customer;
 
 public class CustomerAction extends Action {
 
-    private static final List<Customer> CUSTOMERS = new CopyOnWriteArrayList<>();
-
-    static {
-        // Data inisial untuk demo
-        CUSTOMERS.add(new Customer("CUST-001", "Budi Santoso", "budi@example.com", "08123456789", "Jakarta"));
-        CUSTOMERS.add(new Customer("CUST-002", "Siti Aminah", "siti@example.com", "08234567890", "Surabaya"));
-    }
+    private final CustomerDao dao = new CustomerDao();
 
     @Override
     public ActionForward execute(ActionMapping mapping,
@@ -42,28 +35,20 @@ public class CustomerAction extends Action {
             ActionErrors errors = customerForm.validateFields();
             if (!errors.isEmpty()) {
                 saveErrors(request, errors);
-                request.setAttribute("customerList", CUSTOMERS);
+                request.setAttribute("customerList", dao.list());
                 return mapping.findForward("list");
             }
 
             String id = customerForm.getId();
             if (id != null && !id.trim().isEmpty()) {
                 // Edit existing
-                for (Customer c : CUSTOMERS) {
-                    if (c.getId().equals(id.trim())) {
-                        c.setName(customerForm.getName());
-                        c.setEmail(customerForm.getEmail());
-                        c.setPhone(customerForm.getPhone());
-                        c.setCity(customerForm.getCity());
-                        break;
-                    }
-                }
+                dao.update(new Customer(id.trim(), customerForm.getName(), customerForm.getEmail(),
+                        customerForm.getPhone(), customerForm.getCity()));
             } else {
                 // Add new
-                String newId = "CUST-" + String.format("%03d", CUSTOMERS.size() + 1);
-                Customer newCust = new Customer(newId, customerForm.getName(), customerForm.getEmail(),
-                        customerForm.getPhone(), customerForm.getCity());
-                CUSTOMERS.add(newCust);
+                String newId = dao.nextId();
+                dao.insert(new Customer(newId, customerForm.getName(), customerForm.getEmail(),
+                        customerForm.getPhone(), customerForm.getCity()));
             }
 
             ActionMessages messages = new ActionMessages();
@@ -76,7 +61,7 @@ public class CustomerAction extends Action {
         } else if ("delete".equalsIgnoreCase(action)) {
             String deleteId = request.getParameter("id");
             if (deleteId != null) {
-                CUSTOMERS.removeIf(c -> c.getId().equals(deleteId));
+                dao.delete(deleteId);
                 ActionMessages messages = new ActionMessages();
                 messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("customer.success.deleted"));
                 saveMessages(request, messages);
@@ -85,20 +70,18 @@ public class CustomerAction extends Action {
         } else if ("edit".equalsIgnoreCase(action)) {
             String editId = request.getParameter("id");
             if (editId != null) {
-                for (Customer c : CUSTOMERS) {
-                    if (c.getId().equals(editId)) {
-                        customerForm.setId(c.getId());
-                        customerForm.setName(c.getName());
-                        customerForm.setEmail(c.getEmail());
-                        customerForm.setPhone(c.getPhone());
-                        customerForm.setCity(c.getCity());
-                        break;
-                    }
+                Customer c = dao.findById(editId);
+                if (c != null) {
+                    customerForm.setId(c.getId());
+                    customerForm.setName(c.getName());
+                    customerForm.setEmail(c.getEmail());
+                    customerForm.setPhone(c.getPhone());
+                    customerForm.setCity(c.getCity());
                 }
             }
         }
 
-        request.setAttribute("customerList", CUSTOMERS);
+        request.setAttribute("customerList", dao.list());
         return mapping.findForward("list");
     }
 }

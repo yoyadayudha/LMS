@@ -1,12 +1,12 @@
 package com.example.struts;
 
+import java.io.File;
+
 import org.apache.catalina.Context;
 import org.apache.catalina.WebResourceRoot;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.catalina.webresources.DirResourceSet;
 import org.apache.catalina.webresources.StandardRoot;
-
-import java.io.File;
 
 public class ServerLauncher {
 
@@ -45,9 +45,15 @@ public class ServerLauncher {
             context.setResources(resources);
         }
 
+        new com.example.struts.db.CustomerDao().initSchemaAndSeed();
+        org.h2.tools.Server webConsole =
+                org.h2.tools.Server.createWebServer("-webPort", "8082").start();
+        Runtime.getRuntime().addShutdownHook(new Thread(webConsole::stop));
+
         System.out.println("=================================================");
         System.out.println("🚀 Starting Struts 1 on Java " + System.getProperty("java.version"));
         System.out.println("🌐 URL: http://localhost:" + port + contextPath + "/welcome.do");
+        System.out.println("🗄️  H2 Console: http://localhost:8082");
         System.out.println("=================================================");
 
         tomcat.start();

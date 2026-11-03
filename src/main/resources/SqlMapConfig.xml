@@ -8,7 +8,7 @@
     <transactionManager type="JDBC">
         <dataSource type="SIMPLE">
             <property name="JDBC.Driver" value="org.h2.Driver"/>
-            <property name="JDBC.ConnectionURL" value="jdbc:h2:mem:yodadb;DB_CLOSE_DELAY=-1"/>
+            <property name="JDBC.ConnectionURL" value="jdbc:h2:file:./data/yodadb;AUTO_SERVER=TRUE"/>
             <property name="JDBC.Username" value="sa"/>
             <property name="JDBC.Password" value=""/>
         </dataSource>

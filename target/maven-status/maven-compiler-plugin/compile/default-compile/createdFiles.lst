@@ -1,0 +1,10 @@
+com\example\struts\db\CustomerDao.class
+com\example\struts\model\Customer.class
+com\example\struts\db\SqlMapClientFactory.class
+com\example\struts\db\DataAccessException.class
+com\example\struts\action\CustomerAction.class
+com\example\struts\ServerLauncher.class
+com\example\struts\action\LogoutAction.class
+com\example\struts\form\LoginForm.class
+com\example\struts\form\CustomerForm.class
+com\example\struts\action\LoginAction.class

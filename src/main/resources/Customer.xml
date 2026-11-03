@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Customer">
+
+    <resultMap id="customerResult" class="com.example.struts.model.Customer">
+        <result property="id"    column="id"/>
+        <result property="name"  column="name"/>
+        <result property="email" column="email"/>
+        <result property="phone" column="phone"/>
+        <result property="city"  column="city"/>
+    </resultMap>
+
+    <select id="selectAllCustomers" resultMap="customerResult">
+        SELECT id, name, email, phone, city FROM CUSTOMER ORDER BY id
+    </select>
+
+    <select id="selectCustomerById" parameterClass="java.lang.String" resultMap="customerResult">
+        SELECT id, name, email, phone, city FROM CUSTOMER WHERE id = #value#
+    </select>
+
+    <insert id="insertCustomer" parameterClass="com.example.struts.model.Customer">
+        INSERT INTO CUSTOMER (id, name, email, phone, city)
+        VALUES (#id#, #name#, #email#, #phone#, #city#)
+    </insert>
+
+    <update id="updateCustomer" parameterClass="com.example.struts.model.Customer">
+        UPDATE CUSTOMER SET name = #name#, email = #email#, phone = #phone#, city = #city#
+        WHERE id = #id#
+    </update>
+
+    <delete id="deleteCustomer" parameterClass="java.lang.String">
+        DELETE FROM CUSTOMER WHERE id = #value#
+    </delete>
+
+</sqlMap>
