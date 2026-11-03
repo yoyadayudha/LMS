@@ -1,1 +1,25 @@
-kior
+# Build output
+target/
+
+# H2 database files
+data/
+*.db
+*.lock.db
+
+# Tomcat embedded work dir
+tomcat.8080/
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# Kiro
+.kiro/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Logs
+*.log

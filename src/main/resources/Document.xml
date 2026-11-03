@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Document">
+
+    <resultMap id="documentResult" class="com.example.struts.model.Document">
+        <result property="kodeDokumen" column="kode_dokumen"/>
+        <result property="namaDokumen" column="nama_dokumen"/>
+        <result property="kategoriDokumen" column="kategori_dokumen"/>
+        <result property="tipeDosir" column="tipe_dosir"/>
+        <result property="aktif" column="aktif"/>
+    </resultMap>
+
+    <select id="selectAllDocuments" resultMap="documentResult">
+        SELECT kode_dokumen, nama_dokumen, kategori_dokumen, tipe_dosir, aktif
+        FROM DOCUMENT
+        ORDER BY kode_dokumen
+    </select>
+
+    <select id="selectDocumentById" parameterClass="java.lang.String" resultMap="documentResult">
+        SELECT kode_dokumen, nama_dokumen, kategori_dokumen, tipe_dosir, aktif
+        FROM DOCUMENT
+        WHERE kode_dokumen = #value#
+    </select>
+
+    <insert id="insertDocument" parameterClass="com.example.struts.model.Document">
+        INSERT INTO DOCUMENT (kode_dokumen, nama_dokumen, kategori_dokumen, tipe_dosir, aktif)
+        VALUES (#kodeDokumen#, #namaDokumen#, #kategoriDokumen#, #tipeDosir#, #aktif#)
+    </insert>
+
+    <update id="updateDocument" parameterClass="com.example.struts.model.Document">
+        UPDATE DOCUMENT
+        SET nama_dokumen = #namaDokumen#,
+        kategori_dokumen = #kategoriDokumen#,
+        tipe_dosir = #tipeDosir#,
+        aktif = #aktif#
+        WHERE kode_dokumen = #kodeDokumen#
+    </update>
+
+    
+    <delete id="deleteDocument" parameterClass="java.lang.String">
+        DELETE FROM DOCUMENT
+        WHERE kode_dokumen = #value#
+    </delete>
+
+</sqlMap>

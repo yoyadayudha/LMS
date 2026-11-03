@@ -15,5 +15,6 @@
     </transactionManager>
 
     <sqlMap resource="Customer.xml"/>
+    <sqlMap resource="Document.xml"/>
 
 </sqlMapConfig>
