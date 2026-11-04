@@ -9,6 +9,7 @@
     <form-beans>
         <form-bean name="loginForm" type="com.example.struts.form.LoginForm"/>
         <form-bean name="customerForm" type="com.example.struts.form.CustomerForm"/>
+        <form-bean name="documentForm" type="com.example.struts.form.DocumentForm"/>
     </form-beans>
 
     <!-- Global Forwards -->
@@ -51,6 +52,16 @@
                 validate="false">
             <forward name="list" path="/customer.jsp"/>
             <forward name="redirectList" path="/customer.do" redirect="true"/>
+        </action>
+
+        <!-- Document -->
+        <action path="/document"
+                type="com.example.struts.action.DocumentAction"
+                name="documentForm"
+                scope="request"
+                input="/document.jsp"
+                validate="false">
+            <forward name="list" path="/document.jsp"/>
         </action>
     </action-mappings>
 

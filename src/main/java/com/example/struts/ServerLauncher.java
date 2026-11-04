@@ -46,6 +46,7 @@ public class ServerLauncher {
         }
 
         new com.example.struts.db.CustomerDao().initSchemaAndSeed();
+        new com.example.struts.db.DocumentDao().initSchemaAndSeed();
         org.h2.tools.Server webConsole =
                 org.h2.tools.Server.createWebServer("-webPort", "8082").start();
         Runtime.getRuntime().addShutdownHook(new Thread(webConsole::stop));

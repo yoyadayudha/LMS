@@ -14,6 +14,7 @@
         <div>
             <a href="<%=request.getContextPath()%>/welcome.do">Home</a>
             <a href="<%=request.getContextPath()%>/customer.do" id="nav-customers">Manajemen Pelanggan</a>
+            <a href="<%=request.getContextPath()%>/document.do" id="nav-documents">Manajemen Dokumen</a>
             <logic:present name="user" scope="session">
                 <a href="<%=request.getContextPath()%>/logout.do" id="nav-logout"><bean:message key="login.logout"/></a>
             </logic:present>
