@@ -15,8 +15,7 @@
         <div>
             <a href="<%=request.getContextPath()%>/welcome.do">Home</a>
             <a href="<%=request.getContextPath()%>/customer.do">Manajemen Pelanggan</a>
-            <a href="<%=request.getContextPath()%>/document.do" id="nav-documents">Manajemen Dokumen</a>
-            <logic:present name="user" scope="session">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         <logic:present name="user" scope="session">
                 <a href="<%=request.getContextPath()%>/logout.do" id="nav-logout"><bean:message key="login.logout"/></a>
             </logic:present>
             <logic:notPresent name="user" scope="session">
@@ -148,6 +147,30 @@
                     </logic:empty>
                 </tbody>
             </table>
+
+            <div id="pagination" style="margin-top: 1rem; display: flex; gap: 0.5rem; align-items: center;">
+                <logic:equal name="hasPrev" value="true">
+                    <a id="btn-prev" class="btn btn-secondary"
+                    href="<%=request.getContextPath()%>/document.do?page=<bean:write name="prevPage"/>"><-</a>
+                </logic:equal>
+                <logic:notEqual name="hasPrev" value="true">
+                    <span id="btn-prev" class="btn btn-secondary" style="opacity:0.5; pointer-events:none;"><-</span>
+                </logic:notEqual>
+
+                <span id="page-info">
+                    Halaman <bean:write name="halaman"/> dari <bean:write name="totalHalaman"/>
+                    (<bean:write name="totalData"/> data)
+                </span>
+
+                <logic:equal name="hasNext" value="true">
+                    <a id="btn-next" class="btn btn-secondary"
+                    href="<%=request.getContextPath()%>/document.do?page=<bean:write name="nextPage"/>">-></a>
+                </logic:equal>
+                <logic:notEqual name="hasNext" value="true">
+                    <span id="btn-next" class="btn btn-secondary" style="opacity:0.5; pointer-events:none;">-></span>
+                </logic:notEqual>
+            </div>
+            
         </div>
     </div>
 </body>

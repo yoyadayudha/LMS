@@ -44,4 +44,15 @@
         WHERE kode_dokumen = #value#
     </delete>
 
+    <select id="countAllDocuments" resultClass = "java.lang.Integer">
+        SELECT COUNT (*) FROM DOCUMENT
+    </select>
+
+    <select id="selectDocumentsPaged" parameterClass="java.util.Map" resultMap="documentResult">
+        SELECT kode_dokumen, nama_dokumen, kategori_dokumen, tipe_dosir, aktif
+        FROM DOCUMENT
+        ORDER BY kode_dokumen
+        LIMIT #limit# OFFSET #offset#
+    </select>
+
 </sqlMap>

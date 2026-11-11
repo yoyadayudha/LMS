@@ -17,7 +17,7 @@ public final class SqlMapClientFactory {
         if (instance == null) {
             synchronized (SqlMapClientFactory.class) {
                 if (instance == null) {
-                    try (Reader reader = Resources.getResourceAsReader("SqlMapConfig.xml")) {
+                    try (Reader     reader = Resources.getResourceAsReader("SqlMapConfig.xml")) {
                         instance = SqlMapClientBuilder.buildSqlMapClient(reader);
                     } catch (Exception e) {
                         throw new RuntimeException("Failed to initialize iBATIS SqlMapClient", e);

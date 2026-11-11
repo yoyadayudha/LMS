@@ -1,5 +1,7 @@
 package com.example.struts.action;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -43,7 +45,7 @@ public class DocumentAction extends Action{
 
             if(!errors.isEmpty()) {
                 saveErrors(request, errors);
-                request.setAttribute("documentList", dao.list());
+                kirimData(request);
                 return mapping.findForward("list");
             }
 
@@ -92,9 +94,43 @@ public class DocumentAction extends Action{
         }
 
 
-        request.setAttribute("documentList", dao.list());
+        kirimData(request);
         return mapping.findForward("list");
         
+    }
+
+    private static final int UKURAN_HALAMAN = 5;
+
+    private void kirimData(HttpServletRequest request) {
+        int halaman = 1;
+        String param = request.getParameter("page");
+        if(param != null){
+            try{
+                halaman = Integer.parseInt(param.trim());
+            } catch (NumberFormatException e){
+                halaman = 1;
+            }
+        }
+        if(halaman < 1) halaman = 1;
+
+        int totalData = dao.countAll();
+        
+        int totalHalaman = (totalData + UKURAN_HALAMAN - 1) / UKURAN_HALAMAN;
+        if(totalHalaman < 1) totalHalaman = 1;
+        if(halaman > totalHalaman) halaman = totalHalaman;
+
+        int offset = (halaman - 1) * UKURAN_HALAMAN;
+
+        List<Document> sebagianData = dao.list(UKURAN_HALAMAN, offset);
+
+        request.setAttribute("documentList", sebagianData);
+        request.setAttribute("halaman", halaman);
+        request.setAttribute("totalHalaman", totalHalaman);
+        request.setAttribute("totalData", totalData);
+        request.setAttribute("hasPrev", halaman > 1);
+        request.setAttribute("hasNext", halaman < totalHalaman);
+        request.setAttribute("prevPage", halaman - 1);
+        request.setAttribute("nextPage", halaman + 1);
     }
     
 }

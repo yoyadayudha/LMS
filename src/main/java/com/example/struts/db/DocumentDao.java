@@ -3,7 +3,9 @@ package com.example.struts.db;
 import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.example.struts.model.Document;
 import com.ibatis.sqlmap.client.SqlMapClient;
@@ -65,6 +67,27 @@ public class DocumentDao {
                 + " aktif BOOLEAN)");
         } catch (SQLException e){
             throw new DataAccessException("buat tabel dokumen gagal", e);
+        }
+    }
+
+    public int countAll() {
+        try {
+            Integer total = (Integer) sqlMap.queryForObject("countAllDocuments");
+            return total == null ? 0 : total.intValue();
+        } catch (SQLException e) {
+            throw new DataAccessException("hitung dokumen gagal", e);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Document> list(int limit, int offset) {
+        try {
+            Map<String, Integer> params = new HashMap<>();
+            params.put("limit", limit);
+            params.put("offset", offset);
+            return sqlMap.queryForList("selectDocumentsPaged", params);
+        } catch (SQLException e) {
+            throw new DataAccessException("list dokumen paged gagal", e);
         }
     }
 
