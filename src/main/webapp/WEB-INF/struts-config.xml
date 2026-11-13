@@ -8,7 +8,6 @@
     <!-- Form Beans -->
     <form-beans>
         <form-bean name="loginForm" type="com.example.struts.form.LoginForm"/>
-        <form-bean name="customerForm" type="com.example.struts.form.CustomerForm"/>
         <form-bean name="documentForm" type="com.example.struts.form.DocumentForm"/>
     </form-beans>
 
@@ -41,17 +40,6 @@
         <action path="/logout"
                 type="com.example.struts.action.LogoutAction">
             <forward name="success" path="/login.jsp" redirect="true"/>
-        </action>
-
-        <!-- Route: Customer Management -->
-        <action path="/customer"
-                type="com.example.struts.action.CustomerAction"
-                name="customerForm"
-                scope="request"
-                input="/customer.jsp"
-                validate="false">
-            <forward name="list" path="/customer.jsp"/>
-            <forward name="redirectList" path="/customer.do" redirect="true"/>
         </action>
 
         <!-- Document -->

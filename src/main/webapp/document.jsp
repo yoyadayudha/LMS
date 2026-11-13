@@ -13,9 +13,7 @@
     <div class="navbar">
         <strong>Struts 1 + Java 21 Demo</strong>
         <div>
-            <a href="<%=request.getContextPath()%>/welcome.do">Home</a>
-            <a href="<%=request.getContextPath()%>/customer.do">Manajemen Pelanggan</a>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         <logic:present name="user" scope="session">
+            <a href="<%=request.getContextPath()%>/welcome.do">Home</a>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         <logic:present name="user" scope="session">
                 <a href="<%=request.getContextPath()%>/logout.do" id="nav-logout"><bean:message key="login.logout"/></a>
             </logic:present>
             <logic:notPresent name="user" scope="session">
@@ -41,7 +39,8 @@
         <div class="card">
             <h3><bean:message key="document.form.heading"/></h3>
             <html:form action="/document.do" method="post">
-                <html:hidden property="action" value="save" />
+                <html:hidden property="action" 
+                 />
                 <html:hidden property="editMode" />
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">

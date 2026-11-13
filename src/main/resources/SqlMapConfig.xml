@@ -14,7 +14,7 @@
         </dataSource>
     </transactionManager>
 
-    <sqlMap resource="Customer.xml"/>
     <sqlMap resource="Document.xml"/>
+    <sqlMap resource="User.xml"/>
 
 </sqlMapConfig>

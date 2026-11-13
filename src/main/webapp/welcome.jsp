@@ -13,7 +13,6 @@
         <strong>Struts 1 + Java 21 Demo</strong>
         <div>
             <a href="<%=request.getContextPath()%>/welcome.do">Home</a>
-            <a href="<%=request.getContextPath()%>/customer.do" id="nav-customers">Manajemen Pelanggan</a>
             <a href="<%=request.getContextPath()%>/document.do" id="nav-documents">Manajemen Dokumen</a>
             <logic:present name="user" scope="session">
                 <a href="<%=request.getContextPath()%>/logout.do" id="nav-logout"><bean:message key="login.logout"/></a>
@@ -38,7 +37,6 @@
                     </p>
                 </div>
                 <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
-                    <a href="<%=request.getContextPath()%>/customer.do" id="btn-go-customer" class="btn btn-primary">Buka Manajemen Pelanggan</a>
                     <a href="<%=request.getContextPath()%>/logout.do" id="btn-logout" class="btn btn-secondary">Logout</a>
                 </div>
             </logic:present>
