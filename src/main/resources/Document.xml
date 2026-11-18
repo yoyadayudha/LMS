@@ -55,4 +55,27 @@
         LIMIT #limit# OFFSET #offset#
     </select>
 
+    <select id="countDocuments" parameterClass="java.util.Map" resultClass="java.lang.Integer">
+        SELECT COUNT (*) FROM DOCUMENT
+        <dynamic prepend="WHERE">
+            <isNotEmpty property="q">
+                LOWER(kode_dokumen) LIKE #cari#
+                OR LOWER(nama_dokumen) LIKE #cari#
+            </isNotEmpty>
+        </dynamic>
+    </select>
+
+    <select id="searchDocumentsPaged" parameterClass="java.util.Map" resultMap="documentResult">
+        SELECT kode_dokumen, nama_dokumen, kategori_dokumen, tipe_dosir, aktif
+        FROM DOCUMENT
+        <dynamic prepend="WHERE">
+            <isNotEmpty property="q">
+                LOWER(kode_dokumen) LIKE #cari#
+                OR LOWER(nama_dokumen) LIKE #cari#
+            </isNotEmpty>
+        </dynamic>
+        ORDER BY kode_dokumen
+        LIMIT #limit# OFFSET #offset#
+    </select>
+
 </sqlMap>

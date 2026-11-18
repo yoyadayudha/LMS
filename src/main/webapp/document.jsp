@@ -39,8 +39,7 @@
         <div class="card">
             <h3><bean:message key="document.form.heading"/></h3>
             <html:form action="/document.do" method="post">
-                <html:hidden property="action" 
-                 />
+                <html:hidden property="action" value="save"/>
                 <html:hidden property="editMode" />
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
@@ -131,8 +130,8 @@
                                        class="btn btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;">Edit</a>
 
                                     <a href="<%=request.getContextPath()%>/document.do?action=delete&kodeDokumen=<bean:write name="doc" property="kodeDokumen"/>"
-                                       class="btn btn-danger"
-                                       onclick="return confirm('Yakin hapus dokumen ini?');">Hapus</a>
+                                    class="btn btn-danger"
+                                    onclick="return confirm('Yakin hapus dokumen ini?');">Hapus</a>
                                 </td>
                             </tr>
                         </logic:iterate>

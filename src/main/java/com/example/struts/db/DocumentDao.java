@@ -91,4 +91,36 @@ public class DocumentDao {
         }
     }
 
+    public int countAll(String q){
+        try{
+            Map<String, Object> params = bikinParams(q, 0, 0);
+            Integer total = (Integer) sqlMap.queryForObject("countDocuments", params);
+            return total == null ? 0 : total.intValue();
+        } catch (SQLException e){
+            throw new DataAccessException("hitung dokumen (search) gagal", e);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Document> list(String q, int limit, int offset){
+        try{
+            Map<String, Object> params = bikinParams(q, limit, offset);
+            return sqlMap.queryForList("searchDocumentsPaged", params);
+        }catch (SQLException e){
+            throw new DataAccessException("list dokumen (search) gagal", e);
+        }
+    }
+
+    private Map<String, Object> bikinParams(String q, int limit, int offset){
+        Map<String, Object> params = new HashMap<>();
+        if(q != null && !q.trim().isEmpty()){
+            String kata = q.trim().toLowerCase();
+            params.put("q", kata);
+            params.put("cari", "%" + kata + "%");
+        }
+        params.put("limit", limit);
+        params.put("offset", offset);
+        return params;
+    }
+
 }

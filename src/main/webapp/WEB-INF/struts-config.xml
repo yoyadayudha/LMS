@@ -50,6 +50,8 @@
                 input="/document.jsp"
                 validate="false">
             <forward name="list" path="/document.jsp"/>
+            <forward name="form" path="/documentForm.jsp"/>
+            <forward name="redirectList" path="/document.do" redirect="true"/>
         </action>
     </action-mappings>
 

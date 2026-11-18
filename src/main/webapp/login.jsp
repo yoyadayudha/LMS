@@ -49,7 +49,7 @@
             <div style="margin-top: 1.5rem; font-size: 0.85rem; color: #64748b; background: #f1f5f9; padding: 0.75rem; border-radius: 6px;">
                 💡 <strong>Petunjuk Kredensial:</strong><br>
                 Username: <code>admin</code><br>
-                Password: <code>admin123</code>
+                Password: <code>user123</code>
             </div>
         </div>
     </div>
