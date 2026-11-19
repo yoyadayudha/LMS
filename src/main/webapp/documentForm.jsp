@@ -13,9 +13,9 @@
     <div class="navbar">
         <strong>Struts 1 + Java 21 Demo</strong>
         <div>
-            <a href="<%=request.getContextPath()%>/welcome.do">Home</a>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         <logic:present name="user" scope="session">
-            <a href="<%=request.getContextPath()%>/document.do" id="nav-documents">Tipe Dokumen</a>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         <logic:present name="user" scope="session">
-                <logic:present name="user" scope="session">
+            <a href="<%=request.getContextPath()%>/welcome.do">Home</a>
+            <a href="<%=request.getContextPath()%>/document.do" id="nav-documents">Tipe Dokumen</a>
+            <logic:present name="user" scope="session">
                 <a href="<%=request.getContextPath()%>/logout.do" id="nav-logout"><bean:message key="login.logout"/></a>
             </logic:present>
             <logic:notPresent name="user" scope="session">
@@ -23,6 +23,7 @@
             </logic:notPresent>
         </div>
     </div>
+
         
     <div class="container">
         <logic:messagesPresent>

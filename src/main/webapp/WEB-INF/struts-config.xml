@@ -47,9 +47,9 @@
                 type="com.example.struts.action.DocumentAction"
                 name="documentForm"
                 scope="request"
-                input="/document.jsp"
+                input="/documentForm.jsp"
                 validate="false">
-            <forward name="list" path="/document.jsp"/>
+            <forward name="list" path="/documentList.jsp"/>
             <forward name="form" path="/documentForm.jsp"/>
             <forward name="redirectList" path="/document.do" redirect="true"/>
         </action>
