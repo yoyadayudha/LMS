@@ -1,9 +1,12 @@
 package com.example.struts.action;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionErrors;
@@ -25,6 +28,10 @@ public class DocumentAction extends Action{
                                 ActionForm form,
                                 HttpServletRequest request,
                                 HttpServletResponse response) throws Exception {
+        HttpSession session = request.getSession(false);
+        if(session == null || session.getAttribute("user") == null){
+            return mapping.findForward("login");
+        }
         DocumentForm documentForm = (DocumentForm) form;
         String action = documentForm.getAction();
 
@@ -101,29 +108,50 @@ public class DocumentAction extends Action{
 
     private static final int UKURAN_HALAMAN = 5;
 
-    private void kirimData(HttpServletRequest request) {
+    private String bacaQ(HttpServletRequest request){
+        String q = request.getParameter("q");
+        if(q == null){
+            return "";
+        }
+
+        q = q.trim();
+        if(q.length() > 100){
+            q = q.substring(0,100);
+        }
+
+        return q;
+
+    }
+
+    private void kirimData(HttpServletRequest request){
+        String q = bacaQ(request);
+
         int halaman = 1;
         String param = request.getParameter("page");
+
         if(param != null){
             try{
                 halaman = Integer.parseInt(param.trim());
-            } catch (NumberFormatException e){
+            }catch(NumberFormatException e){
                 halaman = 1;
             }
         }
+
         if(halaman < 1) halaman = 1;
 
-        int totalData = dao.countAll();
-        
+        int totalData = dao.countAll(q);
+
         int totalHalaman = (totalData + UKURAN_HALAMAN - 1) / UKURAN_HALAMAN;
         if(totalHalaman < 1) totalHalaman = 1;
         if(halaman > totalHalaman) halaman = totalHalaman;
 
         int offset = (halaman - 1) * UKURAN_HALAMAN;
 
-        List<Document> sebagianData = dao.list(UKURAN_HALAMAN, offset);
+        List<Document> sebagianData = dao.list(q, UKURAN_HALAMAN, offset);
 
         request.setAttribute("documentList", sebagianData);
+        request.setAttribute("q", q);
+        request.setAttribute("qEnc", URLEncoder.encode(q, StandardCharsets.UTF_8));
         request.setAttribute("halaman", halaman);
         request.setAttribute("totalHalaman", totalHalaman);
         request.setAttribute("totalData", totalData);
@@ -132,5 +160,6 @@ public class DocumentAction extends Action{
         request.setAttribute("prevPage", halaman - 1);
         request.setAttribute("nextPage", halaman + 1);
     }
+
     
 }

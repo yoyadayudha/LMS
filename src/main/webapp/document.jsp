@@ -98,6 +98,14 @@
         </div>
         <div class="card">
             <h3><bean:message key="document.heading"/></h3>
+            <form action="<%=request.getContextPath()%>/document.do" method="get"
+                >
+            <input type="text" name="q" id="search-q" class="form-control"
+            placeholder="Cari kode atau nama dokumen"
+            value="<bean:write name="q"/>">
+                <button type="submit" id="btn-search" class="btn btn-primary">Cari</button>
+                <a href="<%=request.getContextPath()%>/document.do" id="btn-search-reset" class="btn btn-secondary">Reset</a>
+            </form>
             <table id="document-table">
                 <thead>
                     <tr>
@@ -149,7 +157,7 @@
             <div id="pagination" style="margin-top: 1rem; display: flex; gap: 0.5rem; align-items: center;">
                 <logic:equal name="hasPrev" value="true">
                     <a id="btn-prev" class="btn btn-secondary"
-                    href="<%=request.getContextPath()%>/document.do?page=<bean:write name="prevPage"/>"><-</a>
+                    href="<%=request.getContextPath()%>/document.do?page=<bean:write name="prevPage"/>&q=<bean:write name="qEnc"/>"><-</a>
                 </logic:equal>
                 <logic:notEqual name="hasPrev" value="true">
                     <span id="btn-prev" class="btn btn-secondary" style="opacity:0.5; pointer-events:none;"><-</span>
@@ -162,7 +170,7 @@
 
                 <logic:equal name="hasNext" value="true">
                     <a id="btn-next" class="btn btn-secondary"
-                    href="<%=request.getContextPath()%>/document.do?page=<bean:write name="nextPage"/>">-></a>
+                    href="<%=request.getContextPath()%>/document.do?page=<bean:write name="nextPage"/>&q=<bean:write name="qEnc"/>">-></a>
                 </logic:equal>
                 <logic:notEqual name="hasNext" value="true">
                     <span id="btn-next" class="btn btn-secondary" style="opacity:0.5; pointer-events:none;">-></span>
