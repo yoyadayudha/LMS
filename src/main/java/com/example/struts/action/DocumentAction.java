@@ -14,7 +14,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.ActionRedirect;
 
 import com.example.struts.db.DocumentDao;
 import com.example.struts.form.DocumentForm;
@@ -28,6 +28,7 @@ public class DocumentAction extends Action{
                                 ActionForm form,
                                 HttpServletRequest request,
                                 HttpServletResponse response) throws Exception {
+
         HttpSession session = request.getSession(false);
         if(session == null || session.getAttribute("user") == null){
             return mapping.findForward("login");
@@ -39,21 +40,46 @@ public class DocumentAction extends Action{
             action = "list";
         }
 
-        if("save".equalsIgnoreCase(action)){
+        String q = bacaQ(request);
+        int halamanAsal = bacaHalaman(request);
+        request.setAttribute("q", q);
+        request.setAttribute("qEnc", URLEncoder.encode(q, StandardCharsets.UTF_8));
+        request.setAttribute("backPage", halamanAsal);
+
+        if("add".equalsIgnoreCase(action)){
+            documentForm.reset(mapping, request);
+            return mapping.findForward("form");
+        }
+
+        if("edit".equalsIgnoreCase(action)){
+            String kode = request.getParameter("kodeDokumen");
+            Document d = (kode == null) ? null : dao.findById(kode);
+                if(d == null)
+                    return redirectKeList(mapping, halamanAsal, q);
+
+                    documentForm.setKodeDokumen(d.getKodeDokumen());
+                    documentForm.setNamaDokumen(d.getNamaDokumen());
+                    documentForm.setKategoriDokumen(d.getKategoriDokumen());
+                    documentForm.setTipeDosir(d.getTipeDosir());
+                    documentForm.setAktif(d.isAktif());
+                    documentForm.setEditMode("true");
+                    return mapping.findForward("form");
+        }
+
+        if ("save".equalsIgnoreCase(action)){
             ActionErrors errors = documentForm.validateFields();
             boolean isEdit = "true".equals(documentForm.getEditMode());
 
             if(errors.isEmpty() && !isEdit){
                 String kodeBaru = documentForm.getKodeDokumen().trim();
-                if (dao.findById(kodeBaru) != null){
+                if(dao.findById(kodeBaru) != null){
                     errors.add("kodeDokumen", new ActionMessage("errors.duplicate", "Kode Dokumen"));
                 }
             }
 
-            if(!errors.isEmpty()) {
+            if(!errors.isEmpty()){
                 saveErrors(request, errors);
-                kirimData(request);
-                return mapping.findForward("list");
+                return mapping.findForward("form");
             }
 
             Document doc = new Document(
@@ -62,49 +88,46 @@ public class DocumentAction extends Action{
                 documentForm.getKategoriDokumen(),
                 documentForm.getTipeDosir(),
                 documentForm.getAktif());
-            
-            ActionMessages messages = new ActionMessages();
-            if(isEdit) {
-                dao.update(doc);
-                messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("document.success.updated"));
 
+            if(isEdit){
+                dao.update(doc);
+                session.setAttribute("flash", "updated");
             }else{
                 dao.insert(doc);
-                messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("document.success.added"));
+                session.setAttribute("flash", "added");
             }
 
-            saveMessages(request, messages);
+            return redirectKeList(mapping, halamanAsal, q);
+        }
 
-            documentForm.reset(mapping, request);
-        } else if("delete".equalsIgnoreCase(action)){
+        if("delete".equalsIgnoreCase(action)){
             String kode = request.getParameter("kodeDokumen");
-            if(kode != null){
+            if(kode!=null){
                 dao.delete(kode);
-                ActionMessages messages = new ActionMessages();
-                messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("document.success.deleted"));
-                saveMessages(request, messages);
+                session.setAttribute("flash", "deleted");
             }
-            documentForm.reset(mapping, request);
-        } else if("edit".equalsIgnoreCase(action)){
-            String kode = request.getParameter("kodeDokumen");
-            if(kode != null){
-                Document d = dao.findById(kode);
-                if(d != null){
-                    documentForm.setKodeDokumen(d.getKodeDokumen());
-                    documentForm.setNamaDokumen(d.getNamaDokumen());
-                    documentForm.setKategoriDokumen(d.getKategoriDokumen());
-                    documentForm.setTipeDosir(d.getTipeDosir());
-                    documentForm.setAktif(d.isAktif());
-                    documentForm.setEditMode("true");
-                }
-            }
+
+            return redirectKeList(mapping,halamanAsal,q);
         }
 
 
-        kirimData(request);
+        Object flash = session.getAttribute("flash");
+        if(flash!=null){
+            request.setAttribute("flash", flash);
+            session.removeAttribute("flash");
+        }
+        kirimData(request,q,halamanAsal);
         return mapping.findForward("list");
-        
     }
+
+        private ActionForward redirectKeList(ActionMapping mapping, int page, String q){
+            ActionRedirect redirect = new ActionRedirect(mapping.findForward("redirectList"));
+            redirect.addParameter("page", page);
+            if(!q.isEmpty()){
+                redirect.addParameter("q", q);
+            }
+            return redirect;
+        }
 
     private static final int UKURAN_HALAMAN = 5;
 
@@ -123,9 +146,7 @@ public class DocumentAction extends Action{
 
     }
 
-    private void kirimData(HttpServletRequest request){
-        String q = bacaQ(request);
-
+    private int bacaHalaman(HttpServletRequest request){
         int halaman = 1;
         String param = request.getParameter("page");
 
@@ -137,7 +158,10 @@ public class DocumentAction extends Action{
             }
         }
 
-        if(halaman < 1) halaman = 1;
+        return halaman < 1 ? 1 : halaman;
+    }
+
+    private void kirimData(HttpServletRequest request, String q, int halaman){
 
         int totalData = dao.countAll(q);
 

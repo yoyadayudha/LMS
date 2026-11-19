@@ -135,7 +135,7 @@
                                 </td>
                                 <td>
                                     <a href="<%=request.getContextPath()%>/document.do?action=edit&kodeDokumen=<bean:write name="doc" property="kodeDokumen"/>"
-                                       class="btn btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;">Edit</a>
+                                    class="btn btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;">Edit</a>
 
                                     <a href="<%=request.getContextPath()%>/document.do?action=delete&kodeDokumen=<bean:write name="doc" property="kodeDokumen"/>"
                                     class="btn btn-danger"

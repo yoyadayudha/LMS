@@ -1,0 +1,129 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://struts.apache.org/tags-html" prefix="html" %>
+<%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean" %>
+<%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic" %>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title><bean:message key="document.title"/></title>
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/css/style.css">
+</head>
+<body>
+    <div class="navbar">
+        <strong>Struts 1 + Java 21 Demo</strong>
+        <div>
+            <a href="<%=request.getContextPath()%>/welcome.do">Home</a>
+            <a href="<%=request.getContextPath()%>/document.do" id="nav-documents">Tipe Dokumen</a>
+            <logic:present name="user" scope="session">
+                <a href="<%=request.getContextPath()%>/logout.do" id="nav-logout"><bean:message key="login.logout"/></a>
+            </logic:present>
+            <logic:notPresent name="user" scope="session">
+                <a href="<%=request.getContextPath()%>/showLogin.do" id="nav-login">Login</a>
+            </logic:notPresent>
+        </div>
+    </div>
+
+
+    <div class="container">
+        <logic:present name="flash">
+            <div id="success-notification" class="success-message">
+                <logic:equal name="flash" value="added">
+                    <bean:message key="document.success.added"/>
+                </logic:equal>
+                <logic:equal name="flash" value="updated">
+                    <bean:message key="document.success.updated"/>
+                </logic:equal>
+                <logic:equal name="flash" value="deleted">
+                    <bean:message key="document.success.deleted"/>
+                </logic:equal>
+            </div>
+        </logic:present>
+            
+        <div class="card">
+            <h3><bean:message key="document.heading"/></h3>
+            <form action="<%=request.getContextPath()%>/document.do" method="get"
+                >
+            <input type="text" name="q" id="search-q" class="form-control"
+            placeholder="Cari kode atau nama dokumen"
+            value="<bean:write name="q"/>">
+                <button type="submit" id="btn-search" class="btn btn-primary">Cari</button>
+                <a href="<%=request.getContextPath()%>/document.do" id="btn-search-reset" class="btn btn-secondary">Reset</a>
+                <a href="<%=request.getContextPath()%>/document.do?action=add&page=<bean:write name="halaman"/>&q=<bean:write name="qEnc"/>"
+                    id="btn-add" class="btn btn-primary">Tambah Dokumen</a>
+            </form>
+            <table id="document-table">
+                <thead>
+                    <tr>
+                        <th><bean:message key="document.kode"/></th>
+                        <th><bean:message key="document.nama"/></th>
+                        <th><bean:message key="document.kategori"/></th>
+                        <th><bean:message key="document.tipeDosir"/></th>
+                        <th>Status</th>
+                        <th><bean:message key="document.actions"/></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <logic:notEmpty name="documentList">
+                        <logic:iterate name="documentList" id="doc">
+                            <tr id="document-row-<bean:write name="doc" property="kodeDokumen"/>">
+                                <td><span class="badge"><bean:write name="doc" property="kodeDokumen"/></span></td>
+                                <td><bean:write name="doc" property="namaDokumen"/></td>
+                                <td><bean:write name="doc" property="kategoriDokumen"/></td>
+                                <td><bean:write name="doc" property="tipeDosir"/></td>
+                                <td>
+                                    <logic:equal name="doc" property="aktif" value="true">
+                                        <bean:message key="document.status.aktif"/>
+                                    </logic:equal>
+                                    <logic:notEqual name="doc" property="aktif" value="true">
+                                        <bean:message key="document.status.nonaktif"/>
+                                    </logic:notEqual>
+                                </td>
+                                <td>
+                                    <a href="<%=request.getContextPath()%>/document.do?action=edit&kodeDokumen=<bean:write name="doc" property="kodeDokumen"/>&page=<bean:write name="halaman"/>&q=<bean:write name="qEnc"/>"
+                                    class="btn btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;">Edit</a>
+
+                                    <a href="<%=request.getContextPath()%>/document.do?action=delete&kodeDokumen=<bean:write name="doc" property="kodeDokumen"/>&page=<bean:write name="halaman"/>&q=<bean:write name="qEnc"/>"
+                                    class="btn btn-danger"
+                                    onclick="return confirm('Yakin hapus dokumen ini?');">Hapus</a>
+                                </td>
+                            </tr>
+                        </logic:iterate>
+                    </logic:notEmpty>
+                    <logic:empty name="documentList">
+                        <tr>
+                            <td colspan="6" style="text-align: center; color: #64748b;" id="empty-message">
+                                <bean:message key="document.empty"/>
+                            </td>
+                        </tr>
+                    </logic:empty>
+                </tbody>
+            </table>
+
+            <div id="pagination" style="margin-top: 1rem; display: flex; gap: 0.5rem; align-items: center;">
+                <logic:equal name="hasPrev" value="true">
+                    <a id="btn-prev" class="btn btn-secondary"
+                    href="<%=request.getContextPath()%>/document.do?page=<bean:write name="prevPage"/>&q=<bean:write name="qEnc"/>"><-</a>
+                </logic:equal>
+                <logic:notEqual name="hasPrev" value="true">
+                    <span id="btn-prev" class="btn btn-secondary" style="opacity:0.5; pointer-events:none;"><-</span>
+                </logic:notEqual>
+
+                <span id="page-info">
+                    Halaman <bean:write name="halaman"/> dari <bean:write name="totalHalaman"/>
+                    (<bean:write name="totalData"/> data)
+                </span>
+
+                <logic:equal name="hasNext" value="true">
+                    <a id="btn-next" class="btn btn-secondary"
+                    href="<%=request.getContextPath()%>/document.do?page=<bean:write name="nextPage"/>&q=<bean:write name="qEnc"/>">-></a>
+                </logic:equal>
+                <logic:notEqual name="hasNext" value="true">
+                    <span id="btn-next" class="btn btn-secondary" style="opacity:0.5; pointer-events:none;">-></span>
+                </logic:notEqual>
+            </div>
+            
+        </div>
+    </div>
+</body>
+</html>
